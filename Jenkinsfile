@@ -8,12 +8,17 @@ pipeline {
     }
 
     stages {
-       
-        stage('git checkout') {
+        stage('Checkout Code') {
             steps {
-                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/silentknight2001/simple-html-page.git'
+                git branch: 'main',
+                    url: 'https://github.com/silentknight2001/simple-html-page.git'
             }
         }
+        // stage('git checkout') {
+        //     steps {
+        //         git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/silentknight2001/simple-html-page.git'
+        //     }
+        // }
         stage('Build and tag Docker Image') {
             steps {
                 script{
