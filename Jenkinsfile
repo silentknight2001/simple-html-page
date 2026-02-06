@@ -6,6 +6,9 @@ pipeline {
         CONTAINER_NAME = "web"
         DOCKER_CREDS = "docker-cred"
     }
+
+    stages {
+       
         stage('git checkout') {
             steps {
                 git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/silentknight2001/simple-html-page.git'
