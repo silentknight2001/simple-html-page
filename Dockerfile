@@ -1,6 +1,6 @@
 FROM nginx:alpine
 
-RUN rm -rf /user/share/nginx/html/*
+RUN rm -rf /usr/share/nginx/html/*
 
 COPY web-app/ /user/share/nginx/html/
 
