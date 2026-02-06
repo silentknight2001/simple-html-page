@@ -2,47 +2,39 @@ pipeline {
     agent { label 'ec2-docker' }
 
     environment {
-        DOCKER_IMAGE = "nayan2001/html-nginx"
+        DOCKER_IMAGE = "nayan2001/web-app"
         CONTAINER_NAME = "web"
         DOCKER_CREDS = "docker-cred"
     }
 
     stages {
-
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/silentknight2001/simple-html-page.git'
             }
         }
-
-        stage('Build Docker Image') {
+        stage('git checkout') {
             steps {
-                sh '''
-                docker build -t $DOCKER_IMAGE:latest .
-                '''
+                git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/silentknight2001/simple-html-page.git'
             }
         }
-
-        stage('Docker Hub Login') {
+        stage('Build and tag Docker Image') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: docker-cred,
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh '''
-                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                    '''
+                script{
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker', url: 'https://index.docker.io/v1/') {
+                       sh 'docker build -t nayan2001/web-app:latest .'
+                  }
                 }
             }
         }
-
-        stage('Push Image to Docker Hub') {
+        stage('Push Docker Image') {
             steps {
-                sh '''
-                docker push $DOCKER_IMAGE:latest
-                '''
+                script{
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker', url: 'https://index.docker.io/v1/') {
+                       sh 'docker push nayan2001/web-app:latest'
+                  }
+                }
             }
         }
 
