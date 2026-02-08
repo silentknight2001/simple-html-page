@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'ec2-docker' }
+    agent { label 'ec2' }
 
     environment {
         DOCKER_IMAGE = "nayan2001/web-app"
